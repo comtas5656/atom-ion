@@ -6,11 +6,11 @@
   <title>基本元素とイオン暗記倶楽部</title>
 
   <!-- アイコン設定（PCタブ用 & iOSホーム画面用） -->
-  <link rel="icon" href="icon.png?v=1.1.0" type="image/png">
-  <link rel="apple-touch-icon" href="icon.png?v=1.1.0">
+  <link rel="icon" href="icon.png?v=1.1.1" type="image/png">
+  <link rel="apple-touch-icon" href="icon.png?v=1.1.1">
 
   <!-- PWA設定（Android / Chrome用） -->
-  <link rel="manifest" href="manifest.json?v=1.1.0">
+  <link rel="manifest" href="manifest.json?v=1.1.1">
   <meta name="theme-color" content="#2c3e50">
 
   <!-- iOS (Safari) 用のPWA全画面表示設定 -->
@@ -402,7 +402,7 @@
 <div class="container">
   <div class="header-container">
     <h1>基本元素とイオン暗記倶楽部</h1>
-    <span class="version-badge">v1.1.0</span>
+    <span class="version-badge">v1.1.1</span>
   </div>
 
   <div class="main-module-tabs">
@@ -669,8 +669,13 @@
         return item.name.includes(keyword) || item.formula.toLowerCase().includes(keyword);
       } else {
         const matchKey = item.name.includes(keyword) || item.formula.toLowerCase().includes(keyword) || item.ions.toLowerCase().includes(keyword);
-        if (qaTypeDecomp.value === "basic") return matchKey && item.level === "basic";
-        if (qaTypeDecomp.value === "applied") return matchKey && item.level === "applied";
+        
+        // 【修正箇所】1問1答モード（qa）のときだけ難易度フィルターを有効にする
+        if (currentMode === "qa") {
+          if (qaTypeDecomp.value === "basic") return matchKey && item.level === "basic";
+          if (qaTypeDecomp.value === "applied") return matchKey && item.level === "applied";
+        }
+        
         return matchKey;
       }
     });
