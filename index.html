@@ -6,11 +6,11 @@
   <title>基本元素とイオン暗記倶楽部</title>
 
   <!-- アイコン設定（PCタブ用 & iOSホーム画面用） -->
-  <link rel="icon" href="icon.png?v=1.1.2" type="image/png">
-  <link rel="apple-touch-icon" href="icon.png?v=1.1.2">
+  <link rel="icon" href="icon.png?v=1.1.3" type="image/png">
+  <link rel="apple-touch-icon" href="icon.png?v=1.1.3">
 
   <!-- PWA設定（Android / Chrome用） -->
-  <link rel="manifest" href="manifest.json?v=1.1.2">
+  <link rel="manifest" href="manifest.json?v=1.1.3">
   <meta name="theme-color" content="#2c3e50">
 
   <!-- iOS (Safari) 用のPWA全画面表示設定 -->
@@ -47,6 +47,47 @@
       max-width: 1000px;
       margin: 0 auto;
       width: 100%;
+    }
+
+    /* バージョン更新通知バナー */
+    .version-notice {
+      background: linear-gradient(135deg, #d35400, #e67e22);
+      color: #ffffff;
+      padding: 8px 12px;
+      border-radius: 8px;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      font-size: 13px;
+    }
+
+    .version-notice-content {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .version-notice-title {
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .version-notice-close {
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      color: #ffffff;
+      padding: 4px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+
+    .version-notice-close:hover {
+      background: rgba(255, 255, 255, 0.35);
     }
 
     .header-container {
@@ -239,8 +280,8 @@
 
     /* モジュールごとの専用色指定 */
     .card-category.elem { background-color: var(--secondary-color); } /* エメラルドグリーン */
-    .card-category.ion { background-color: var(--ion-color); }        /* オレンジ */[cite: 2]
-    .card-category.comp { background-color: var(--accent-color); }     /* パープル */[cite: 2]
+    .card-category.ion { background-color: var(--ion-color); }        /* オレンジ */
+    .card-category.comp { background-color: var(--accent-color); }     /* パープル */
 
     .card-name {
       font-size: 16px;
@@ -402,9 +443,18 @@
 <body>
 
 <div class="container">
+  <!-- バージョン更新通知バナー -->
+  <div id="versionNotice" class="version-notice hidden">
+    <div class="version-notice-content">
+      <span class="version-notice-title" id="versionNoticeTitle">アプリが更新されました</span>
+      <span id="versionNoticeDetail">バージョン情報が更新されました。</span>
+    </div>
+    <button class="version-notice-close" id="closeNoticeBtn">了解</button>
+  </div>
+
   <div class="header-container">
     <h1>基本元素とイオン暗記倶楽部</h1>
-    <span class="version-badge">v1.1.2</span>
+    <span class="version-badge" id="versionBadge">v1.1.3</span>
   </div>
 
   <div class="main-module-tabs">
@@ -495,6 +545,38 @@
 
 <script>
   // ==========================================
+  // バージョン管理設定
+  // ==========================================
+  const CURRENT_VERSION = "1.1.3";
+  const STORAGE_KEY_VERSION = "element_ion_app_version";
+  const APP_NAME = "基本元素とイオン暗記倶楽部";
+
+  function checkVersionUpdate() {
+    const savedVersion = localStorage.getItem(STORAGE_KEY_VERSION);
+    const versionBadge = document.getElementById("versionBadge");
+    const versionNotice = document.getElementById("versionNotice");
+    const versionNoticeTitle = document.getElementById("versionNoticeTitle");
+    const versionNoticeDetail = document.getElementById("versionNoticeDetail");
+
+    versionBadge.textContent = `v${CURRENT_VERSION}`;
+
+    if (!savedVersion) {
+      versionNoticeTitle.textContent = "アプリへようこそ！";
+      versionNoticeDetail.textContent = `${APP_NAME} (v${CURRENT_VERSION}) をご利用いただけます。`;
+      versionNotice.classList.remove("hidden");
+    } else if (savedVersion !== CURRENT_VERSION) {
+      versionNoticeTitle.textContent = "アプリが更新されました！";
+      versionNoticeDetail.textContent = `v${savedVersion} から v${CURRENT_VERSION} にアップデートされました。`;
+      versionNotice.classList.remove("hidden");
+    }
+
+    document.getElementById("closeNoticeBtn").addEventListener("click", () => {
+      localStorage.setItem(STORAGE_KEY_VERSION, CURRENT_VERSION);
+      versionNotice.classList.add("hidden");
+    });
+  }
+
+  // ==========================================
   // データベース
   // ==========================================
 
@@ -527,20 +609,20 @@
     { id: 101, name: "水素イオン", formula: "H⁺", type: "基本イオン" },
     { id: 102, name: "ナトリウムイオン", formula: "Na⁺", type: "基本イオン" },
     { id: 103, name: "カリウムイオン", formula: "K⁺", type: "基本イオン" },
-    { id: 107, name: "カルシウムイオン", formula: "Ca²⁺", type: "基本イオン" },
+    { id: 104, name: "カルシウムイオン", formula: "Ca²⁺", type: "基本イオン" },
     { id: 105, name: "アンモニウムイオン", formula: "NH₄⁺", type: "基本イオン" },
-    { id: 110, name: "フッ化物イオン", formula: "F⁻", type: "基本イオン" },
-    { id: 111, name: "塩化物イオン", formula: "Cl⁻", type: "基本イオン" },
-    { id: 112, name: "臭化物イオン", formula: "Br⁻", type: "基本イオン" },
-    { id: 113, name: "水酸化物イオン", formula: "OH⁻", type: "基本イオン" },
-    { id: 114, name: "硝酸イオン", formula: "NO₃⁻", type: "基本イオン" },
-    { id: 120, name: "硫酸イオン", formula: "SO₄²⁻", type: "基本イオン" },
-    { id: 121, name: "炭酸イオン", formula: "CO₃²⁻", type: "基本イオン" },
-    { id: 115, name: "酢酸イオン", formula: "CH₃COO⁻", type: "基本イオン" },
-    { id: 117, name: "硫酸水素イオン", formula: "HSO₄⁻", type: "基本イオン" },
-    { id: 116, name: "炭酸水素イオン", formula: "HCO₃⁻", type: "基本イオン" },
-    { id: 118, name: "酸化物イオン", formula: "O²⁻", type: "基本イオン" },
-    { id: 119, name: "硫化物イオン", formula: "S²⁻", type: "基本イオン" },
+    { id: 106, name: "フッ化物イオン", formula: "F⁻", type: "基本イオン" },
+    { id: 107, name: "塩化物イオン", formula: "Cl⁻", type: "基本イオン" },
+    { id: 108, name: "臭化物イオン", formula: "Br⁻", type: "基本イオン" },
+    { id: 109, name: "水酸化物イオン", formula: "OH⁻", type: "基本イオン" },
+    { id: 110, name: "硝酸イオン", formula: "NO₃⁻", type: "基本イオン" },
+    { id: 111, name: "硫酸イオン", formula: "SO₄²⁻", type: "基本イオン" },
+    { id: 112, name: "炭酸イオン", formula: "CO₃²⁻", type: "基本イオン" },
+    { id: 113, name: "酢酸イオン", formula: "CH₃COO⁻", type: "基本イオン" },
+    { id: 114, name: "硫酸水素イオン", formula: "HSO₄⁻", type: "基本イオン" },
+    { id: 115, name: "炭酸水素イオン", formula: "HCO₃⁻", type: "基本イオン" },
+    { id: 116, name: "酸化物イオン", formula: "O²⁻", type: "基本イオン" },
+    { id: 117, name: "硫化物イオン", formula: "S²⁻", type: "基本イオン" },
   ];
 
   // 3. イオンでできた物質（画像プリント掲載の10種）
@@ -559,23 +641,32 @@
 
   // 4. イオン分解・推測問題（無個性で客観的な解説文に統一）
   const decompData = [
-    { id: 301, formula: "NaCl", name: "塩化ナトリウム", ions: "Na⁺ と Cl⁻", level: "basic", comment: "Na⁺ と Cl⁻ が電荷の合計ゼロとなるように 1:1 で結合します。" },
+    { id: 301, formula: "NaCl", name: "塩化ナトリウム", ions: "Na⁺ と Cl⁻", level: "basic", comment: "Na⁺ と Cl⁻ を電荷の合計ゼロになるように組み合わせるので 1:1 です。" },
     { id: 302, formula: "K₂O", name: "酸化カリウム", ions: "K⁺ と O²⁻", level: "basic", comment: "K⁺ と O²⁻ を電荷の合計ゼロになるように組み合わせるので 2:1 です。" },
-    { id: 303, formula: "NaOH", name: "水酸化ナトリウム", ions: "Na⁺ と OH⁻", level: "basic", comment: "Na⁺ と OH⁻ が 1:1 で結合します。" },
+    { id: 303, formula: "NaOH", name: "水酸化ナトリウム", ions: "Na⁺ と OH⁻", level: "basic", comment: "Na⁺ と OH⁻ を電荷の合計ゼロになるように組み合わせるので 1:1 です。" },
     { id: 304, formula: "Na₂SO₄", name: "硫酸ナトリウム", ions: "Na⁺ と SO₄²⁻", level: "basic", comment: "Na⁺ と SO₄²⁻ を電荷の合計ゼロになるように組み合わせるので 2:1 です。" },
-    { id: 305, formula: "CaCO₃", name: "炭酸カルシウム", ions: "Ca²⁺ と CO₃²⁻", level: "basic", comment: "Ca²⁺ と CO₃²⁻ が 1:1 で結合します。" },
-    { id: 306, formula: "CH₃COONa", name: "酢酸ナトリウム", ions: "Na⁺ と CH₃COO⁻", level: "basic", comment: "CH₃COO⁻ と Na⁺ が 1:1 で結合します。" },
-    { id: 307, formula: "NaHSO₄", name: "硫酸水素ナトリウム", ions: "Na⁺ と HSO₄⁻", level: "basic", comment: "Na⁺ と HSO₄⁻ が 1:1 で結合します。" },
+    { id: 305, formula: "CaCO₃", name: "炭酸カルシウム", ions: "Ca²⁺ と CO₃²⁻", level: "basic", comment: "Ca²⁺ と CO₃²⁻ を電荷の合計ゼロになるように組み合わせるので 1:1 です。" },
+    { id: 306, formula: "CH₃COONa", name: "酢酸ナトリウム", ions: "Na⁺ と CH₃COO⁻", level: "basic", comment: "CH₃COO⁻ と Na⁺ を電荷の合計ゼロになるように組み合わせるので 1:1 です。" },
+    { id: 307, formula: "NaHSO₄", name: "硫酸水素ナトリウム", ions: "Na⁺ と HSO₄⁻", level: "basic", comment: "Na⁺ と HSO₄⁻ を電荷の合計ゼロになるように組み合わせるので 1:1 です。" },
     { id: 308, formula: "Ca(HCO₃)₂", name: "炭酸水素カルシウム", ions: "Ca²⁺ と HCO₃⁻", level: "basic", comment: "Ca²⁺ と HCO₃⁻ を電荷の合計ゼロになるように組み合わせるので 1:2 です。" },
     { id: 309, formula: "FeCl₂", name: "塩化鉄 (II)", ions: "Fe²⁺ と Cl⁻", level: "basic", comment: "Cl⁻ が2個結合しているため、鉄イオンの価数は +2（Fe²⁺）となります。" },
     { id: 310, formula: "FeCl₃", name: "塩化鉄 (III)", ions: "Fe³⁺ と Cl⁻", level: "basic", comment: "Cl⁻ が3個結合しているため、鉄イオンの価数は +3（Fe³⁺）となります。" },
     
     // 初見対応練習（一方のみが既知・もう一方が未知の組合せ）
     { id: 311, formula: "AgCl", name: "塩化銀", ions: "Ag⁺ と Cl⁻", level: "applied", comment: "既知の陰イオン Cl⁻ (-1) から、Ag は 1価の陽イオン（Ag⁺）と求まります。" },
-    { id: 312, formula: "CuSO₄", name: "硫酸銅 (II)", ions: "Cu²⁺ と SO₄²⁻", level: "applied", comment: "既知の陰イオン SO₄²⁻ (-2) から、Cu は 2価の陽イオン（Cu²⁺）と求まります。" },
-    { id: 313, formula: "Mg(NO₃)₂", name: "硝酸マグネシウム", ions: "Mg²⁺ と NO₃⁻", level: "applied", comment: "既知の陰イオン NO₃⁻ (-1) が2個あるため、Mg は 2価の陽イオン（Mg²⁺）となります。" },
-    { id: 314, formula: "Al₂O₃", name: "酸化アルミニウム", ions: "Al³⁺ と O²⁻", level: "applied", comment: "既知の陰イオン O²⁻ (-2) が3個（計 -6）であるため、Al は 3価の陽イオン（Al³⁺）となります。" },
-    { id: 315, formula: "ZnSO₄", name: "硫酸亜鉛", ions: "Zn²⁺ と SO₄²⁻", level: "applied", comment: "既知の陰イオン SO₄²⁻ (-2) から、Zn は 2価の陽イオン（Zn²⁺）と求まります。" }
+    { id: 312, formula: "BaCl₂", name: "塩化バリウム", ions: "Ba²⁺ と Cl⁻", level: "applied", comment: "既知の陰イオン Cl⁻ (-1) が2個あるため、Ba は 2価の陽イオン（Ba²⁺）となります。" },
+    { id: 313, formula: "CuCl₂", name: "塩化銅 (II)", ions: "Cu²⁺ と Cl⁻", level: "applied", comment: "既知の陰イオン Cl⁻ (-1) が2個あるため、Cu は 2価の陽イオン（Cu²⁺）となります。" },
+    { id: 314, formula: "ZnSO₄", name: "硫酸亜鉛", ions: "Zn²⁺ と SO₄²⁻", level: "applied", comment: "既知の陰イオン SO₄²⁻ (-2) から、Zn は 2価の陽イオン（Zn²⁺）と求まります。" },
+    { id: 315, formula: "BaSO₄", name: "硫酸バリウム", ions: "Ba²⁺ と SO₄²⁻", level: "applied", comment: "既知の陰イオン SO₄²⁻ (-2) から、Ba は 2価の陽イオン（Ba²⁺）と求まります。" },
+    { id: 316, formula: "Al₂(SO₄)₃", name: "硫酸アルミニウム", ions: "Al³⁺ と SO₄²⁻", level: "applied", comment: "既知の陰イオン SO₄²⁻ (-2) が3個（計 -6）あるため、Al2個で+6、つまり Al は 3価の陽イオン（Al³⁺）となります。" },
+    { id: 317, formula: "FeSO₄", name: "硫酸鉄 (II)", ions: "Fe²⁺ と SO₄²⁻", level: "applied", comment: "既知の陰イオン SO₄²⁻ (-2) から、Fe は 2価の陽イオン（Fe²⁺）と求まります。" },
+    { id: 318, formula: "CuSO₄", name: "硫酸銅 (II)", ions: "Cu²⁺ と SO₄²⁻", level: "applied", comment: "既知の陰イオン SO₄²⁻ (-2) から、Cu は 2価の陽イオン（Cu²⁺）と求まります。" },
+    { id: 319, formula: "AgNO₃", name: "硝酸銀", ions: "Ag⁺ と NO₃⁻", level: "applied", comment: "既知の陰イオン NO₃⁻ (-1) から、Ag は 1価の陽イオン（Ag⁺）と求まります。" },
+    { id: 320, formula: "Mg(NO₃)₂", name: "硝酸マグネシウム", ions: "Mg²⁺ と NO₃⁻", level: "applied", comment: "既知の陰イオン NO₃⁻ (-1) が2個あるため、Mg は 2価の陽イオン（Mg²⁺）となります。" },
+    { id: 321, formula: "Pb(NO₃)₂", name: "硝酸鉛 (II)", ions: "Pb²⁺ と NO₃⁻", level: "applied", comment: "既知の陰イオン NO₃⁻ (-1) が2個あるため、Pb は 2価の陽イオン（Pb²⁺）となります。" },
+    { id: 322, formula: "Al₂O₃", name: "酸化アルミニウム", ions: "Al³⁺ と O²⁻", level: "applied", comment: "既知の陰イオン O²⁻ (-2) が3個（計 -6）であるため、Al は 3価の陽イオン（Al³⁺）となります。" },
+    { id: 323, formula: "KI", name: "ヨウ化カリウム", ions: "K⁺ と I⁻", level: "applied", comment: "既知の陽イオン K⁺ (+1) から、I は 1価の陰イオン（ヨウ化物イオン I⁻）と求まります。" },
+    { id: 324, formula: "KMnO₄", name: "過マンガン酸カリウム", ions: "K⁺ と MnO₄⁻", level: "applied", comment: "既知の陽イオン K⁺ (+1) から、過マンガン酸イオンは 1価の陰イオン（MnO₄⁻）と求まります。" }
   ];
 
   // ==========================================
@@ -672,7 +763,6 @@
       } else {
         const matchKey = item.name.includes(keyword) || item.formula.toLowerCase().includes(keyword) || item.ions.toLowerCase().includes(keyword);
         
-        // 【修正箇所】1問1答モード（qa）のときだけ難易度フィルターを有効にする
         if (currentMode === "qa") {
           if (qaTypeDecomp.value === "basic") return matchKey && item.level === "basic";
           if (qaTypeDecomp.value === "applied") return matchKey && item.level === "applied";
@@ -797,9 +887,9 @@
 
     let qTitle = "", qSub = "", aText = "", cText = "";
 
-if (activeModule === "elem") {
+    if (activeModule === "elem") {
       qaCategory.textContent = `原子番号 ${currentQaItem.num}`;
-      qaCategory.className = "card-category elem"; // ★緑色をセット
+      qaCategory.className = "card-category elem";
       const type = qaTypeElem.value;
       if (type === "numToSym") {
         qTitle = `原子番号 ${currentQaItem.num} 番`;
@@ -816,7 +906,7 @@ if (activeModule === "elem") {
       }
     } else if (activeModule === "ion") {
       qaCategory.textContent = "基本イオン";
-      qaCategory.className = "card-category ion"; // ★オレンジ色をセット
+      qaCategory.className = "card-category ion";
       const type = qaTypeIon.value;
       if (type === "nameToFormula") {
         qTitle = currentQaItem.name;
@@ -829,7 +919,7 @@ if (activeModule === "elem") {
       }
     } else if (activeModule === "comp") {
       qaCategory.textContent = "イオン性物質";
-      qaCategory.className = "card-category comp"; // ★パープル色をセット
+      qaCategory.className = "card-category comp";
       const type = qaTypeComp.value;
       if (type === "formulaToName") {
         qTitle = currentQaItem.formula;
@@ -843,11 +933,8 @@ if (activeModule === "elem") {
         cText = `構成イオン: ${currentQaItem.ions}`;
       }
     } else {
-      // モジュール4（イオンへの分解）
       const isApplied = currentQaItem.level === 'applied';
-      // ★文言を一覧モードと同じ「初見対応」「基礎」に変更
       qaCategory.textContent = isApplied ? '初見対応' : '基礎';
-      // ★レベルに応じた色（オレンジ / パープル）をセット
       qaCategory.className = `card-category ${isApplied ? 'ion' : 'comp'}`;
       
       qTitle = `${currentQaItem.formula} （${currentQaItem.name}）`;
@@ -970,6 +1057,7 @@ if (activeModule === "elem") {
   });
 
   // 初期化
+  checkVersionUpdate();
   renderPeriodicTable();
   switchModule("elem");
 </script>
