@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="app-version" content="1.1.0">
-  
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
-
   <title>基本元素とイオン暗記倶楽部</title>
-  <!-- ファビコン用の設定（PNG画像の場合） -->
-  <link rel="icon" type="image/png" href="icon.png">
 
-  <!-- PWA / ホーム画面追加用の設定 -->
-  <link rel="manifest" href="manifest.json">
+  <!-- アイコン設定（PCタブ用 & iOSホーム画面用） -->
+  <link rel="icon" href="icon.png?v=1.1.0" type="image/png">
+  <link rel="apple-touch-icon" href="icon.png?v=1.1.0">
+
+  <!-- PWA設定（Android / Chrome用） -->
+  <link rel="manifest" href="manifest.json?v=1.1.0">
   <meta name="theme-color" content="#2c3e50">
-  <link rel="apple-touch-icon" href="icon.png">
+
+  <!-- iOS (Safari) 用のPWA全画面表示設定 -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="元素イオン">
 
   <style>
     *, *::before, *::after {
