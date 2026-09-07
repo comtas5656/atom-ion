@@ -6,11 +6,11 @@
   <title>基本元素とイオン暗記倶楽部</title>
 
   <!-- アイコン設定（PCタブ用 & iOSホーム画面用） -->
-  <link rel="icon" href="icon.png?v=1.1.1" type="image/png">
-  <link rel="apple-touch-icon" href="icon.png?v=1.1.1">
+  <link rel="icon" href="icon.png?v=1.1.2" type="image/png">
+  <link rel="apple-touch-icon" href="icon.png?v=1.1.2">
 
   <!-- PWA設定（Android / Chrome用） -->
-  <link rel="manifest" href="manifest.json?v=1.1.1">
+  <link rel="manifest" href="manifest.json?v=1.1.2">
   <meta name="theme-color" content="#2c3e50">
 
   <!-- iOS (Safari) 用のPWA全画面表示設定 -->
@@ -237,8 +237,10 @@
       margin-bottom: 4px;
     }
 
-    .card-category.ion { background-color: var(--ion-color); }
-    .card-category.comp { background-color: var(--accent-color); }
+    /* モジュールごとの専用色指定 */
+    .card-category.elem { background-color: var(--secondary-color); } /* エメラルドグリーン */
+    .card-category.ion { background-color: var(--ion-color); }        /* オレンジ */[cite: 2]
+    .card-category.comp { background-color: var(--accent-color); }     /* パープル */[cite: 2]
 
     .card-name {
       font-size: 16px;
@@ -402,7 +404,7 @@
 <div class="container">
   <div class="header-container">
     <h1>基本元素とイオン暗記倶楽部</h1>
-    <span class="version-badge">v1.1.1</span>
+    <span class="version-badge">v1.1.2</span>
   </div>
 
   <div class="main-module-tabs">
@@ -795,8 +797,9 @@
 
     let qTitle = "", qSub = "", aText = "", cText = "";
 
-    if (activeModule === "elem") {
+if (activeModule === "elem") {
       qaCategory.textContent = `原子番号 ${currentQaItem.num}`;
+      qaCategory.className = "card-category elem"; // ★緑色をセット
       const type = qaTypeElem.value;
       if (type === "numToSym") {
         qTitle = `原子番号 ${currentQaItem.num} 番`;
@@ -813,6 +816,7 @@
       }
     } else if (activeModule === "ion") {
       qaCategory.textContent = "基本イオン";
+      qaCategory.className = "card-category ion"; // ★オレンジ色をセット
       const type = qaTypeIon.value;
       if (type === "nameToFormula") {
         qTitle = currentQaItem.name;
@@ -825,6 +829,7 @@
       }
     } else if (activeModule === "comp") {
       qaCategory.textContent = "イオン性物質";
+      qaCategory.className = "card-category comp"; // ★パープル色をセット
       const type = qaTypeComp.value;
       if (type === "formulaToName") {
         qTitle = currentQaItem.formula;
@@ -838,7 +843,13 @@
         cText = `構成イオン: ${currentQaItem.ions}`;
       }
     } else {
-      qaCategory.textContent = currentQaItem.level === 'applied' ? '初見対応練習' : '基礎問題';
+      // モジュール4（イオンへの分解）
+      const isApplied = currentQaItem.level === 'applied';
+      // ★文言を一覧モードと同じ「初見対応」「基礎」に変更
+      qaCategory.textContent = isApplied ? '初見対応' : '基礎';
+      // ★レベルに応じた色（オレンジ / パープル）をセット
+      qaCategory.className = `card-category ${isApplied ? 'ion' : 'comp'}`;
+      
       qTitle = `${currentQaItem.formula} （${currentQaItem.name}）`;
       qSub = "この物質をつくっている「元のイオン」は？";
       aText = currentQaItem.ions;
