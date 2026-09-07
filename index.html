@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="app-version" content="1.0.0">
+  
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
+  <title>基本元素とイオン暗記倶楽部</title>
+
+  <!-- PWA / ホーム画面追加用の設定 -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2c3e50">
+  <link rel="apple-touch-icon" href="icon-192.png">
+
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary-color: #2c3e50;
+      --secondary-color: #27ae60;
+      --accent-color: #8e44ad;
+      --ion-color: #e67e22;
+      --bg-color: #f8f9fa;
+      --card-bg: #ffffff;
+      --text-color: #333333;
+      --border-color: #e9ecef;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 6px 8px;
+      line-height: 1.4;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .header-container {
+      text-align: center;
+      margin: 2px 0 6px 0;
+    }
+
+    h1 {
+      display: inline-block;
+      color: var(--primary-color);
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .version-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: bold;
+      color: #7f8c8d;
+      background-color: #e2e8f0;
+      padding: 1px 6px;
+      border-radius: 10px;
+      margin-left: 4px;
+      vertical-align: middle;
+    }
+
+    /* メインモジュール切替 */
+    .main-module-tabs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 4px;
+      margin-bottom: 6px;
+      background-color: #edf2f7;
+      padding: 3px;
+      border-radius: 6px;
+    }
+
+    .module-btn {
+      padding: 8px 4px;
+      border: none;
+      background-color: transparent;
+      color: #4a5568;
+      font-weight: bold;
+      font-size: 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .module-btn.active {
+      background-color: var(--primary-color);
+      color: #ffffff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    /* 表示モード切替 */
+    .mode-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+
+    .tab-btn {
+      padding: 5px 16px;
+      border: 1.5px solid var(--secondary-color);
+      background-color: #fff;
+      color: var(--secondary-color);
+      font-weight: bold;
+      font-size: 14px;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      background-color: var(--secondary-color);
+      color: #fff;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 4px;
+      margin-bottom: 6px;
+      width: 100%;
+    }
+
+    select, input {
+      padding: 6px 8px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 13px;
+      width: 100%;
+      background-color: #fff;
+    }
+
+    /* 周期表グリッドレイアウト */
+    .periodic-table-container {
+      background: #fff;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 12px;
+      overflow-x: auto;
+    }
+
+    .periodic-table-title {
+      font-size: 14px;
+      font-weight: bold;
+      color: var(--primary-color);
+      margin-bottom: 6px;
+      text-align: center;
+    }
+
+    .periodic-grid {
+      display: grid;
+      grid-template-columns: repeat(18, minmax(36px, 1fr));
+      gap: 3px;
+      min-width: 600px;
+    }
+
+    .elem-box {
+      border: 1px solid #cbd5e0;
+      border-radius: 4px;
+      padding: 2px;
+      text-align: center;
+      background-color: #f7fafc;
+      font-size: 11px;
+      position: relative;
+    }
+
+    .elem-box.empty {
+      border: none;
+      background: transparent;
+    }
+
+    .elem-num {
+      font-size: 9px;
+      color: #718096;
+      position: absolute;
+      top: 1px;
+      left: 2px;
+    }
+
+    .elem-sym {
+      font-size: 14px;
+      font-weight: bold;
+      color: #2b6cb0;
+      margin-top: 6px;
+    }
+
+    .elem-name {
+      font-size: 9px;
+      color: #2d3748;
+    }
+
+    /* 通常カード表示 */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 8px;
+      width: 100%;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      padding: 10px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .card-category {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: bold;
+      color: #fff;
+      background-color: var(--secondary-color);
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-bottom: 4px;
+    }
+
+    .card-category.ion { background-color: var(--ion-color); }
+    .card-category.comp { background-color: var(--accent-color); }
+
+    .card-name {
+      font-size: 16px;
+      font-weight: bold;
+      color: var(--primary-color);
+    }
+
+    .card-formula {
+      font-size: 20px;
+      font-weight: bold;
+      color: #27ae60;
+      margin: 2px 0;
+    }
+
+    .card-sub {
+      font-size: 12px;
+      color: #7f8c8d;
+    }
+
+    .count-info {
+      text-align: right;
+      margin-bottom: 4px;
+      color: #666;
+      font-size: 12px;
+    }
+
+    /* 1問1答モード */
+    .qa-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      padding-bottom: 80px;
+    }
+
+    .qa-card {
+      width: 100%;
+      max-width: 480px;
+      background-color: #fff;
+      border: 2px solid var(--secondary-color);
+      border-radius: 10px;
+      padding: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      text-align: center;
+      cursor: pointer;
+      user-select: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .qa-question-title {
+      font-size: 24px;
+      font-weight: bold;
+      color: var(--primary-color);
+      margin-top: 4px;
+    }
+
+    .qa-question-sub {
+      font-size: 14px;
+      color: #7f8c8d;
+      margin-top: 2px;
+    }
+
+    .qa-hint {
+      font-size: 12px;
+      color: #888;
+      margin: 8px 0 2px 0;
+    }
+
+    .qa-answer {
+      margin-top: 8px;
+      padding: 10px;
+      background-color: #fffaf0;
+      border: 1px solid #feebc8;
+      border-radius: 6px;
+      width: 100%;
+    }
+
+    .qa-answer-main {
+      font-size: 20px;
+      font-weight: bold;
+      color: #c0392b;
+      white-space: pre-wrap;
+    }
+
+    .qa-comment {
+      margin-top: 6px;
+      font-size: 13px;
+      color: #4a5568;
+      text-align: left;
+      background-color: #f7fafc;
+      padding: 6px 10px;
+      border-radius: 5px;
+      border-left: 3px solid #cbd5e0;
+      line-height: 1.4;
+      white-space: pre-wrap;
+    }
+
+    .review-checkbox-label {
+      margin-top: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: #e74c3c;
+      font-weight: bold;
+      cursor: pointer;
+      background-color: #fff5f5;
+      padding: 4px 12px;
+      border-radius: 14px;
+      border: 1px solid #fbcfe8;
+    }
+
+    .qa-btn {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 15px;
+      font-weight: bold;
+      background-color: #27ae60;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+      width: 100%;
+      max-width: 280px;
+    }
+
+    .qa-progress {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 4px;
+      font-weight: bold;
+    }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 600px) {
+      body { padding: 4px 6px; }
+      h1 { font-size: 18px; }
+      .qa-btn {
+        position: fixed;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 100;
+        max-width: calc(100% - 20px);
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header-container">
+    <h1>基本元素とイオン暗記倶楽部</h1>
+    <span class="version-badge">v1.0.0</span>
+  </div>
+
+  <div class="main-module-tabs">
+    <button class="module-btn active" id="mElem">1. 元素(1〜20番)</button>
+    <button class="module-btn" id="mIon">2. 基本イオン</button>
+    <button class="module-btn" id="mComp">3. イオン性物質</button>
+    <button class="module-btn" id="mDecomp">4. イオンへの分解</button>
+  </div>
+
+  <div class="mode-tabs">
+    <button class="tab-btn active" id="btnListMode">一覧モード</button>
+    <button class="tab-btn" id="btnQaMode">1問1答モード</button>
+  </div>
+
+  <div class="controls">
+    <!-- モジュール1の設問切替 -->
+    <select id="qaTypeElem">
+      <option value="numToSym">出題: 原子番号 ➔ 答: 元素記号・名称</option>
+      <option value="symToName">出題: 元素記号 ➔ 答: 元素名（読み）</option>
+      <option value="nameToSym">出題: 元素名 ➔ 答: 元素記号</option>
+    </select>
+
+    <!-- モジュール2の設問切替 -->
+    <select id="qaTypeIon" class="hidden">
+      <option value="nameToFormula">出題: イオン名 ➔ 答: イオン式</option>
+      <option value="formulaToName">出題: イオン式 ➔ 答: イオン名</option>
+    </select>
+
+    <!-- モジュール3の設問切替 -->
+    <select id="qaTypeComp" class="hidden">
+      <option value="formulaToName">出題: 化学式 ➔ 答: 物質名</option>
+      <option value="nameToFormula">出題: 物質名 ➔ 答: 化学式</option>
+    </select>
+
+    <!-- モジュール4の設問切替 -->
+    <select id="qaTypeDecomp" class="hidden">
+      <option value="all">すべて（基礎＋初見・応用）</option>
+      <option value="basic">基礎問題のみ（プリント掲載）</option>
+      <option value="applied">初見・応用問題のみ（推測）</option>
+    </select>
+
+    <select id="orderSelect" class="hidden">
+      <option value="random">出題順: ランダム</option>
+      <option value="sequential">出題順: 順番通り</option>
+      <option value="reviewOnly">出題順: 要復習チェックのみ</option>
+    </select>
+
+    <input type="text" id="searchInput" placeholder="名称や化学式で検索...">
+  </div>
+
+  <div id="listModeArea">
+    <!-- 短周期表表示枠 -->
+    <div id="periodicContainer" class="periodic-table-container">
+      <div class="periodic-table-title">【短周期表 (1〜20番)】</div>
+      <div class="periodic-grid" id="periodicGrid"></div>
+    </div>
+
+    <div class="count-info" id="countInfo">表示中: 0 件</div>
+    <div class="grid" id="cardGrid"></div>
+  </div>
+
+  <div id="qaModeArea" class="hidden">
+    <div class="qa-container">
+      <div class="qa-progress" id="qaProgress">進捗: 0 / 0</div>
+      <div class="qa-card" id="qaCard">
+        <div style="width: 100%;">
+          <span class="card-category" id="qaCategory">-</span>
+          <div id="qaQuestionContent">-</div>
+        </div>
+        
+        <div id="qaAnswerBox" class="qa-answer hidden">
+          <div style="font-size: 11px; color: #7f8c8d; margin-bottom: 2px;">【解答】</div>
+          <div id="qaAnswerContent" class="qa-answer-main">-</div>
+          <div id="qaCommentContent" class="qa-comment hidden"></div>
+        </div>
+        
+        <div class="qa-hint" id="qaHint">クリック／タップで答えを表示</div>
+
+        <label class="review-checkbox-label" id="reviewCheckContainer" onclick="event.stopPropagation();">
+          <input type="checkbox" id="qaReviewCheck">
+          <span style="user-select: none;">要復習（間違えた）</span>
+        </label>
+      </div>
+      <button class="qa-btn" id="nextQaBtn">次の問題へ ➔</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ==========================================
+  // データベース
+  // ==========================================
+
+  // 1. 元素データ (1〜20番)
+  const elemData = [
+    { id: 1, num: 1, sym: "H", name: "水素", group: 1, period: 1 },
+    { id: 2, num: 2, sym: "He", name: "ヘリウム", group: 18, period: 1 },
+    { id: 3, num: 3, sym: "Li", name: "リチウム", group: 1, period: 2 },
+    { id: 4, num: 4, sym: "Be", name: "ベリリウム", group: 2, period: 2 },
+    { id: 5, num: 5, sym: "B", name: "ホウ素", group: 13, period: 2 },
+    { id: 6, num: 6, sym: "C", name: "炭素", group: 14, period: 2 },
+    { id: 7, num: 7, sym: "N", name: "窒素", group: 15, period: 2 },
+    { id: 8, num: 8, sym: "O", name: "酸素", group: 16, period: 2 },
+    { id: 9, num: 9, sym: "F", name: "フッ素", group: 17, period: 2 },
+    { id: 10, num: 10, sym: "Ne", name: "ネオン", group: 18, period: 2 },
+    { id: 11, num: 11, sym: "Na", name: "ナトリウム", group: 1, period: 3 },
+    { id: 12, num: 12, sym: "Mg", name: "マグネシウム", group: 2, period: 3 },
+    { id: 13, num: 13, sym: "Al", name: "アルミニウム", group: 13, period: 3 },
+    { id: 14, num: 14, sym: "Si", name: "ケイ素", group: 14, period: 3 },
+    { id: 15, num: 15, sym: "P", name: "リン", group: 15, period: 3 },
+    { id: 16, num: 16, sym: "S", name: "硫黄", group: 16, period: 3 },
+    { id: 17, num: 17, sym: "Cl", name: "塩素", group: 17, period: 3 },
+    { id: 18, num: 18, sym: "Ar", name: "アルゴン", group: 18, period: 3 },
+    { id: 19, num: 19, sym: "K", name: "カリウム", group: 1, period: 4 },
+    { id: 20, num: 20, sym: "Ca", name: "カルシウム", group: 2, period: 4 }
+  ];
+
+  // 2. 基本イオンデータ
+  const ionData = [
+    { id: 101, name: "水素イオン", formula: "H⁺", type: "陽イオン (1価)" },
+    { id: 102, name: "ナトリウムイオン", formula: "Na⁺", type: "陽イオン (1価)" },
+    { id: 103, name: "カリウムイオン", formula: "K⁺", type: "陽イオン (1価)" },
+    { id: 104, name: "銀イオン", formula: "Ag⁺", type: "陽イオン (1価)" },
+    { id: 105, name: "アンモニウムイオン", formula: "NH₄⁺", type: "陽イオン (1価)" },
+    { id: 106, name: "マグネシウムイオン", formula: "Mg²⁺", type: "陽イオン (2価)" },
+    { id: 107, name: "カルシウムイオン", formula: "Ca²⁺", type: "陽イオン (2価)" },
+    { id: 108, name: "銅(II)イオン", formula: "Cu²⁺", type: "陽イオン (2価)" },
+    { id: 109, name: "鉄(II)イオン", formula: "Fe²⁺", type: "陽イオン (2価)" },
+    { id: 110, name: "鉄(III)イオン", formula: "Fe³⁺", type: "陽イオン (3価)" },
+    { id: 111, name: "アルミニウムイオン", formula: "Al³⁺", type: "陽イオン (3価)" },
+    { id: 112, name: "塩化物イオン", formula: "Cl⁻", type: "陰イオン (1価)" },
+    { id: 113, name: "水酸化物イオン", formula: "OH⁻", type: "陰イオン (1価)" },
+    { id: 114, name: "硝酸イオン", formula: "NO₃⁻", type: "陰イオン (1価)" },
+    { id: 115, name: "酢酸イオン", formula: "CH₃COO⁻", type: "陰イオン (1価)" },
+    { id: 116, name: "炭酸水素イオン", formula: "HCO₃⁻", type: "陰イオン (1価)" },
+    { id: 117, name: "硫酸水素イオン", formula: "HSO₄⁻", type: "陰イオン (1価)" },
+    { id: 118, name: "酸化物イオン", formula: "O²⁻", type: "陰イオン (2価)" },
+    { id: 119, name: "硫化物イオン", formula: "S²⁻", type: "陰イオン (2価)" },
+    { id: 120, name: "硫酸イオン", formula: "SO₄²⁻", type: "陰イオン (2価)" },
+    { id: 121, name: "炭酸イオン", formula: "CO₃²⁻", type: "陰イオン (2価)" }
+  ];
+
+  // 3. イオンでできた物質（画像プリント掲載の10種）
+  const compData = [
+    { id: 201, formula: "NaCl", name: "塩化ナトリウム", ions: "Na⁺ , Cl⁻" },
+    { id: 202, formula: "K₂O", name: "酸化カリウム", ions: "K⁺ , O²⁻" },
+    { id: 203, formula: "NaOH", name: "水酸化ナトリウム", ions: "Na⁺ , OH⁻" },
+    { id: 204, formula: "Na₂SO₄", name: "硫酸ナトリウム", ions: "Na⁺ , SO₄²⁻" },
+    { id: 205, formula: "CaCO₃", name: "炭酸カルシウム", ions: "Ca²⁺ , CO₃²⁻" },
+    { id: 206, formula: "CH₃COONa", name: "酢酸ナトリウム", ions: "CH₃COO⁻ , Na⁺" },
+    { id: 207, formula: "NaHSO₄", name: "硫酸水素ナトリウム", ions: "Na⁺ , HSO₄⁻" },
+    { id: 208, formula: "Ca(HCO₃)₂", name: "炭酸水素カルシウム", ions: "Ca²⁺ , HCO₃⁻" },
+    { id: 209, formula: "FeCl₂", name: "塩化鉄 (II)", ions: "Fe²⁺ , Cl⁻" },
+    { id: 210, formula: "FeCl₃", name: "塩化鉄 (III)", ions: "Fe³⁺ , Cl⁻" }
+  ];
+
+  // 4. イオン分解・推測問題（基礎10種＋初見応用例）
+  const decompData = [
+    { id: 301, formula: "NaCl", name: "塩化ナトリウム", ions: "Na⁺ と Cl⁻", level: "basic", comment: "食塩の成分。1:1で結合しています。" },
+    { id: 302, formula: "K₂O", name: "酸化カリウム", ions: "K⁺ と O²⁻", level: "basic", comment: "K⁺が2個とO²⁻が1個で電気的に中性（+1×2 + -2 = 0）になっています。" },
+    { id: 303, formula: "NaOH", name: "水酸化ナトリウム", ions: "Na⁺ と OH⁻", level: "basic", comment: "OH⁻は「水酸化物イオン」という多原子イオンです。" },
+    { id: 304, formula: "Na₂SO₄", name: "硫酸ナトリウム", ions: "Na⁺ と SO₄²⁻", level: "basic", comment: "SO₄²⁻（硫酸イオン）は全体で-2の電荷を持ちます。" },
+    { id: 305, formula: "CaCO₃", name: "炭酸カルシウム", ions: "Ca²⁺ と CO₃²⁻", level: "basic", comment: "Ca²⁺(+2) と CO₃²⁻(-2) が1:1で結合しています。" },
+    { id: 306, formula: "CH₃COONa", name: "酢酸ナトリウム", ions: "Na⁺ と CH₃COO⁻", level: "basic", comment: "有機物の塩は陰イオン（CH₃COO⁻）が前に書かれる慣習があります。" },
+    { id: 307, formula: "NaHSO₄", name: "硫酸水素ナトリウム", ions: "Na⁺ と HSO₄⁻", level: "basic", comment: "HSO₄⁻は「硫酸水素イオン」です。" },
+    { id: 308, formula: "Ca(HCO₃)₂", name: "炭酸水素カルシウム", ions: "Ca²⁺ と HCO₃⁻", level: "basic", comment: "HCO₃⁻（炭酸水素イオン）2個に対してCa²⁺が1個結合。" },
+    { id: 309, formula: "FeCl₂", name: "塩化鉄 (II)", ions: "Fe²⁺ と Cl⁻", level: "basic", comment: "Cl⁻が2個あるので、鉄は +2価 の Fe²⁺ と判断できます。" },
+    { id: 310, formula: "FeCl₃", name: "塩化鉄 (III)", ions: "Fe³⁺ と Cl⁻", level: "basic", comment: "Cl⁻が3個あるので、鉄は +3価 の Fe³⁺ と判断できます。" },
+    
+    // 初見・応用問題
+    { id: 311, formula: "AgCl", name: "塩化銀", ions: "Ag⁺ と Cl⁻", level: "applied", comment: "【推測】ClはCl⁻(-1)なので、全体のプラマイゼロよりAgはAg⁺(+1)だと分かります！" },
+    { id: 312, formula: "CuSO₄", name: "硫酸銅(II)", ions: "Cu²⁺ と SO₄²⁻", level: "applied", comment: "【推測】SO₄はSO₄²⁻(-2)なので、パートナーのCuはCu²⁺(+2)になります！" },
+    { id: 313, formula: "NH₄Cl", name: "塩化アンモニウム", ions: "NH₄⁺ と Cl⁻", level: "applied", comment: "【推測】Cl⁻(-1)に対して、NH₄はNH₄⁺(+1)の陽イオンです。" },
+    { id: 314, formula: "Mg(NO₃)₂", name: "硝酸マグネシウム", ions: "Mg²⁺ と NO₃⁻", level: "applied", comment: "【推測】NO₃⁻(-1)が2個あるため、MgはMg²⁺(+2)です。" },
+    { id: 315, formula: "Al₂O₃", name: "酸化アルミニウム", ions: "Al³⁺ と O²⁻", level: "applied", comment: "【推測】O²⁻(-2)が3個で-6。それを2個で打ち消すのでAlはAl³⁺(+3)です！" }
+  ];
+
+  // ==========================================
+  // アプリ状態管理
+  // ==========================================
+  let activeModule = "elem"; // "elem", "ion", "comp", "decomp"
+  let currentMode = "list";  // "list" または "qa"
+  let qaDeck = [];
+  let qaIndex = 0;
+  let currentQaItem = null;
+  const reviewSet = new Set();
+
+  // DOM要素参照
+  const mElemBtn = document.getElementById("mElem");
+  const mIonBtn = document.getElementById("mIon");
+  const mCompBtn = document.getElementById("mComp");
+  const mDecompBtn = document.getElementById("mDecomp");
+
+  const btnListMode = document.getElementById("btnListMode");
+  const btnQaMode = document.getElementById("btnQaMode");
+
+  const qaTypeElem = document.getElementById("qaTypeElem");
+  const qaTypeIon = document.getElementById("qaTypeIon");
+  const qaTypeComp = document.getElementById("qaTypeComp");
+  const qaTypeDecomp = document.getElementById("qaTypeDecomp");
+
+  const orderSelect = document.getElementById("orderSelect");
+  const searchInput = document.getElementById("searchInput");
+
+  const listModeArea = document.getElementById("listModeArea");
+  const periodicContainer = document.getElementById("periodicContainer");
+  const periodicGrid = document.getElementById("periodicGrid");
+  const cardGrid = document.getElementById("cardGrid");
+  const countInfo = document.getElementById("countInfo");
+
+  const qaModeArea = document.getElementById("qaModeArea");
+  const qaCard = document.getElementById("qaCard");
+  const qaCategory = document.getElementById("qaCategory");
+  const qaQuestionContent = document.getElementById("qaQuestionContent");
+  const qaAnswerContent = document.getElementById("qaAnswerContent");
+  const qaCommentContent = document.getElementById("qaCommentContent");
+  const qaAnswerBox = document.getElementById("qaAnswerBox");
+  const qaHint = document.getElementById("qaHint");
+  const qaProgress = document.getElementById("qaProgress");
+  const nextQaBtn = document.getElementById("nextQaBtn");
+  const qaReviewCheck = document.getElementById("qaReviewCheck");
+
+  // 短周期表（1〜20番）の描画
+  function renderPeriodicTable() {
+    periodicGrid.innerHTML = "";
+    // 4周期 × 18族の表を作成
+    const matrix = Array.from({ length: 4 }, () => Array(18).fill(null));
+
+    elemData.forEach(e => {
+      matrix[e.period - 1][e.group - 1] = e;
+    });
+
+    for (let r = 0; r < 4; r++) {
+      for (let c = 0; c < 18; c++) {
+        const item = matrix[r][c];
+        const cell = document.createElement("div");
+        if (item) {
+          cell.className = "elem-box";
+          cell.innerHTML = `
+            <span class="elem-num">${item.num}</span>
+            <div class="elem-sym">${item.sym}</div>
+            <div class="elem-name">${item.name}</div>
+          `;
+        } else {
+          cell.className = "elem-box empty";
+        }
+        periodicGrid.appendChild(cell);
+      }
+    }
+  }
+
+  function getActiveData() {
+    if (activeModule === "elem") return elemData;
+    if (activeModule === "ion") return ionData;
+    if (activeModule === "comp") return compData;
+    return decompData;
+  }
+
+  function getFilteredData() {
+    const data = getActiveData();
+    const keyword = searchInput.value.toLowerCase().trim();
+
+    return data.filter(item => {
+      if (activeModule === "elem") {
+        return item.name.includes(keyword) || item.sym.toLowerCase().includes(keyword) || String(item.num) === keyword;
+      } else if (activeModule === "ion") {
+        return item.name.includes(keyword) || item.formula.toLowerCase().includes(keyword) || item.type.includes(keyword);
+      } else if (activeModule === "comp") {
+        return item.name.includes(keyword) || item.formula.toLowerCase().includes(keyword);
+      } else {
+        const matchKey = item.name.includes(keyword) || item.formula.toLowerCase().includes(keyword) || item.ions.toLowerCase().includes(keyword);
+        if (qaTypeDecomp.value === "basic") return matchKey && item.level === "basic";
+        if (qaTypeDecomp.value === "applied") return matchKey && item.level === "applied";
+        return matchKey;
+      }
+    });
+  }
+
+  // 一覧表示
+  function renderList() {
+    if (activeModule === "elem") {
+      periodicContainer.classList.remove("hidden");
+    } else {
+      periodicContainer.classList.add("hidden");
+    }
+
+    const filtered = getFilteredData();
+    cardGrid.innerHTML = "";
+
+    filtered.forEach(item => {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      if (activeModule === "elem") {
+        card.innerHTML = `
+          <span class="card-category">原子番号 ${item.num}</span>
+          <div class="card-formula">${item.sym}</div>
+          <div class="card-name">${item.name}</div>
+        `;
+      } else if (activeModule === "ion") {
+        card.innerHTML = `
+          <span class="card-category ion">${item.type}</span>
+          <div class="card-formula">${item.formula}</div>
+          <div class="card-name">${item.name}</div>
+        `;
+      } else if (activeModule === "comp") {
+        card.innerHTML = `
+          <span class="card-category comp">イオン性物質</span>
+          <div class="card-formula">${item.formula}</div>
+          <div class="card-name">${item.name}</div>
+          <div class="card-sub">イオン: ${item.ions}</div>
+        `;
+      } else {
+        card.innerHTML = `
+          <span class="card-category ${item.level === 'applied' ? 'ion' : 'comp'}">${item.level === 'applied' ? '初見・応用' : '基礎'}</span>
+          <div class="card-formula">${item.formula}</div>
+          <div class="card-name">${item.name}</div>
+          <div class="card-sub">構成イオン: <strong>${item.ions}</strong></div>
+        `;
+      }
+      cardGrid.appendChild(card);
+    });
+
+    countInfo.textContent = `表示中: ${filtered.length} 件 / 全 ${getActiveData().length} 件`;
+  }
+
+  function shuffle(array) {
+    const arr = [...array];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  function resetQaDeck() {
+    let filtered = getFilteredData();
+
+    if (orderSelect.value === "reviewOnly") {
+      filtered = filtered.filter(item => reviewSet.has(item.id));
+    }
+
+    if (filtered.length === 0) {
+      qaDeck = [];
+      qaIndex = 0;
+      return;
+    }
+
+    if (orderSelect.value === "random" || orderSelect.value === "reviewOnly") {
+      qaDeck = shuffle(filtered);
+    } else {
+      qaDeck = [...filtered];
+    }
+    qaIndex = 0;
+  }
+
+  // 1問1答 表示更新
+  function showNextQaQuestion() {
+    if (qaDeck.length === 0) {
+      qaCategory.textContent = "-";
+      qaQuestionContent.innerHTML = "<div class='qa-question-title'>該当する問題がありません</div>";
+      qaAnswerContent.textContent = "-";
+      qaCommentContent.classList.add("hidden");
+      qaProgress.textContent = "進捗: 0 / 0";
+      qaAnswerBox.classList.add("hidden");
+      qaHint.classList.add("hidden");
+      document.getElementById("reviewCheckContainer").classList.add("hidden");
+      currentQaItem = null;
+      return;
+    }
+
+    document.getElementById("reviewCheckContainer").classList.remove("hidden");
+
+    if (qaIndex >= qaDeck.length) {
+      const currentFiltered = getFilteredData();
+      const currentReviewItems = currentFiltered.filter(item => reviewSet.has(item.id));
+
+      if (currentReviewItems.length > 0) {
+        if (confirm(`1周が完了しました！\n「要復習」の問題が ${currentReviewItems.length} 件あります。\n復習周回を開始しますか？`)) {
+          orderSelect.value = "reviewOnly";
+        }
+      } else if (orderSelect.value === "reviewOnly") {
+        alert("要復習チェックのついた問題をすべて解き終わりました！");
+        orderSelect.value = "random";
+      }
+      resetQaDeck();
+    }
+
+    currentQaItem = qaDeck[qaIndex];
+
+    let qTitle = "", qSub = "", aText = "", cText = "";
+
+    if (activeModule === "elem") {
+      qaCategory.textContent = `原子番号 ${currentQaItem.num}`;
+      const type = qaTypeElem.value;
+      if (type === "numToSym") {
+        qTitle = `原子番号 ${currentQaItem.num} 番`;
+        qSub = "この元素の「記号」と「名称」は？";
+        aText = `${currentQaItem.sym} (${currentQaItem.name})`;
+      } else if (type === "symToName") {
+        qTitle = currentQaItem.sym;
+        qSub = "この元素記号の「読み方（名称）」は？";
+        aText = `${currentQaItem.name} （原子番号 ${currentQaItem.num}）`;
+      } else {
+        qTitle = currentQaItem.name;
+        qSub = "この元素の「元素記号」は？";
+        aText = `${currentQaItem.sym} （原子番号 ${currentQaItem.num}）`;
+      }
+    } else if (activeModule === "ion") {
+      qaCategory.textContent = currentQaItem.type;
+      const type = qaTypeIon.value;
+      if (type === "nameToFormula") {
+        qTitle = currentQaItem.name;
+        qSub = "このイオンの「イオン式」は？";
+        aText = currentQaItem.formula;
+      } else {
+        qTitle = currentQaItem.formula;
+        qSub = "このイオン式の「名称」は？";
+        aText = currentQaItem.name;
+      }
+    } else if (activeModule === "comp") {
+      qaCategory.textContent = "イオン性物質";
+      const type = qaTypeComp.value;
+      if (type === "formulaToName") {
+        qTitle = currentQaItem.formula;
+        qSub = "この化学式の「物質名」は？";
+        aText = currentQaItem.name;
+        cText = `構成イオン: ${currentQaItem.ions}`;
+      } else {
+        qTitle = currentQaItem.name;
+        qSub = "この物質の「化学式」は？";
+        aText = currentQaItem.formula;
+        cText = `構成イオン: ${currentQaItem.ions}`;
+      }
+    } else {
+      qaCategory.textContent = currentQaItem.level === 'applied' ? '初見・応用推測' : '基礎問題';
+      qTitle = `${currentQaItem.formula} （${currentQaItem.name}）`;
+      qSub = "この物質をつくっている「元のイオン」は？";
+      aText = currentQaItem.ions;
+      cText = currentQaItem.comment;
+    }
+
+    qaQuestionContent.innerHTML = `
+      <div class="qa-question-title">${qTitle}</div>
+      <div class="qa-question-sub">${qSub}</div>
+    `;
+
+    qaAnswerContent.textContent = aText;
+
+    if (cText) {
+      qaCommentContent.textContent = cText;
+      qaCommentContent.classList.remove("hidden");
+    } else {
+      qaCommentContent.classList.add("hidden");
+    }
+
+    qaAnswerBox.classList.add("hidden");
+    qaHint.classList.remove("hidden");
+
+    qaReviewCheck.checked = reviewSet.has(currentQaItem.id);
+    qaProgress.textContent = `進捗: ${qaIndex + 1} / ${qaDeck.length}`;
+  }
+
+  function toggleQaAnswer() {
+    if (!currentQaItem) return;
+    qaAnswerBox.classList.toggle("hidden");
+    if (!qaAnswerBox.classList.contains("hidden")) {
+      qaHint.classList.add("hidden");
+    } else {
+      qaHint.classList.remove("hidden");
+    }
+  }
+
+  function nextQa() {
+    if (qaDeck.length === 0) return;
+    qaIndex++;
+    showNextQaQuestion();
+  }
+
+  function switchModule(mod) {
+    activeModule = mod;
+
+    mElemBtn.classList.toggle("active", mod === "elem");
+    mIonBtn.classList.toggle("active", mod === "ion");
+    mCompBtn.classList.toggle("active", mod === "comp");
+    mDecompBtn.classList.toggle("active", mod === "decomp");
+
+    qaTypeElem.classList.toggle("hidden", mod !== "elem" || currentMode !== "qa");
+    qaTypeIon.classList.toggle("hidden", mod !== "ion" || currentMode !== "qa");
+    qaTypeComp.classList.toggle("hidden", mod !== "comp" || currentMode !== "qa");
+    qaTypeDecomp.classList.toggle("hidden", mod !== "decomp" || currentMode !== "qa");
+
+    if (currentMode === "list") {
+      renderList();
+    } else {
+      resetQaDeck();
+      showNextQaQuestion();
+    }
+  }
+
+  function switchDisplayMode(mode) {
+    currentMode = mode;
+
+    btnListMode.classList.toggle("active", mode === "list");
+    btnQaMode.classList.toggle("active", mode === "qa");
+
+    listModeArea.classList.toggle("hidden", mode !== "list");
+    qaModeArea.classList.toggle("hidden", mode !== "qa");
+
+    qaTypeElem.classList.toggle("hidden", activeModule !== "elem" || mode !== "qa");
+    qaTypeIon.classList.toggle("hidden", activeModule !== "ion" || mode !== "qa");
+    qaTypeComp.classList.toggle("hidden", activeModule !== "comp" || mode !== "qa");
+    qaTypeDecomp.classList.toggle("hidden", activeModule !== "decomp" || mode !== "qa");
+    orderSelect.classList.toggle("hidden", mode !== "qa");
+
+    if (mode === "list") {
+      renderList();
+    } else {
+      resetQaDeck();
+      showNextQaQuestion();
+    }
+  }
+
+  // イベント登録
+  mElemBtn.addEventListener("click", () => switchModule("elem"));
+  mIonBtn.addEventListener("click", () => switchModule("ion"));
+  mCompBtn.addEventListener("click", () => switchModule("comp"));
+  mDecompBtn.addEventListener("click", () => switchModule("decomp"));
+
+  btnListMode.addEventListener("click", () => switchDisplayMode("list"));
+  btnQaMode.addEventListener("click", () => switchDisplayMode("qa"));
+
+  qaTypeElem.addEventListener("change", () => { resetQaDeck(); showNextQaQuestion(); });
+  qaTypeIon.addEventListener("change", () => { resetQaDeck(); showNextQaQuestion(); });
+  qaTypeComp.addEventListener("change", () => { resetQaDeck(); showNextQaQuestion(); });
+  qaTypeDecomp.addEventListener("change", () => {
+    if (currentMode === "list") renderList();
+    else { resetQaDeck(); showNextQaQuestion(); }
+  });
+
+  orderSelect.addEventListener("change", () => { resetQaDeck(); showNextQaQuestion(); });
+  searchInput.addEventListener("input", () => {
+    if (currentMode === "list") renderList();
+    else { resetQaDeck(); showNextQaQuestion(); }
+  });
+
+  qaCard.addEventListener("click", toggleQaAnswer);
+  nextQaBtn.addEventListener("click", nextQa);
+
+  qaReviewCheck.addEventListener("change", (e) => {
+    if (!currentQaItem) return;
+    if (e.target.checked) reviewSet.add(currentQaItem.id);
+    else reviewSet.delete(currentQaItem.id);
+  });
+
+  // 初期化
+  renderPeriodicTable();
+  switchModule("elem");
+</script>
+</body>
+</html>
