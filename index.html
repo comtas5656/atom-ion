@@ -6,11 +6,11 @@
   <title>基本元素とイオン暗記倶楽部</title>
 
   <!-- アイコン設定（PCタブ用 & iOSホーム画面用） -->
-  <link rel="icon" href="icon.png?v=1.1.3" type="image/png">
-  <link rel="apple-touch-icon" href="icon.png?v=1.1.3">
+  <link rel="icon" href="icon.png?v=1.1.4" type="image/png">
+  <link rel="apple-touch-icon" href="icon.png?v=1.1.4">
 
   <!-- PWA設定（Android / Chrome用） -->
-  <link rel="manifest" href="manifest.json?v=1.1.3">
+  <link rel="manifest" href="manifest.json?v=1.1.4">
   <meta name="theme-color" content="#2c3e50">
 
   <!-- iOS (Safari) 用のPWA全画面表示設定 -->
@@ -177,7 +177,7 @@
       width: 100%;
     }
 
-    select, input {
+    select, input[type="text"] {
       padding: 6px 8px;
       border: 1px solid #ccc;
       border-radius: 6px;
@@ -383,7 +383,15 @@
       white-space: pre-wrap;
     }
 
-    /* 要復習チェックボックス（横幅を拡張して改行を抑制） */
+
+    /* 要復習チェックボックス */
+    #qaReviewCheck {
+      width: auto;
+      padding: 0;
+      margin: 0;
+      flex: 0 0 auto;
+    }
+
     .review-checkbox-label {
       margin-top: 10px;
       display: inline-flex;
@@ -469,7 +477,7 @@
 
   <div class="header-container">
     <h1>基本元素とイオン暗記倶楽部</h1>
-    <span class="version-badge" id="versionBadge">v1.1.3</span>
+    <span class="version-badge" id="versionBadge">v1.1.4</span>
   </div>
 
   <div class="main-module-tabs">
@@ -562,11 +570,18 @@
 // ==========================================
   // バージョン管理・更新履歴設定
   // ==========================================
-  const CURRENT_VERSION = "1.1.3";
+  const CURRENT_VERSION = "1.1.4";
   const STORAGE_KEY_VERSION = "element_ion_app_version";
 
   // 更新履歴データ（配列形式：新しい順）
   const UPDATES_HISTORY = [
+    {
+      version: "1.1.4",
+      date: "2026-09-08",
+      changes: [
+        "ボタンの横幅を見直しました。"
+      ]
+    },
     {
       version: "1.1.3",
       date: "2026-09-08",
