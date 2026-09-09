@@ -6,11 +6,11 @@
   <title>基本元素とイオン暗記倶楽部</title>
 
   <!-- アイコン設定（PCタブ用 & iOSホーム画面用） -->
-  <link rel="icon" href="icon.png?v=1.1.4" type="image/png">
-  <link rel="apple-touch-icon" href="icon.png?v=1.1.4">
+  <link rel="icon" href="icon.png?v=1.1.5" type="image/png">
+  <link rel="apple-touch-icon" href="icon.png?v=1.1.5">
 
   <!-- PWA設定（Android / Chrome用） -->
-  <link rel="manifest" href="manifest.json?v=1.1.4">
+  <link rel="manifest" href="manifest.json?v=1.1.5">
   <meta name="theme-color" content="#2c3e50">
 
   <!-- iOS (Safari) 用のPWA全画面表示設定 -->
@@ -88,6 +88,54 @@
 
     .version-notice-close:hover {
       background: rgba(255, 255, 255, 0.35);
+    }
+
+    /* モーダルスタイル */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: #fff;
+      border-radius: 8px;
+      max-width: 500px;
+      width: 90%;
+      padding: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .modal-header {
+      margin-bottom: 12px;
+    }
+
+    .modal-title {
+      font-size: 16px;
+      font-weight: bold;
+      color: var(--primary-color);
+    }
+
+    .modal-footer {
+      text-align: right;
+      margin-top: 12px;
+    }
+
+    .modal-btn {
+      background: var(--primary-color);
+      color: #fff;
+      border: none;
+      padding: 6px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
     }
 
     .header-container {
@@ -477,7 +525,7 @@
 
   <div class="header-container">
     <h1>基本元素とイオン暗記倶楽部</h1>
-    <span class="version-badge" id="versionBadge">v1.1.4</span>
+    <span class="version-badge" id="versionBadge">v1.1.5</span>
   </div>
 
   <div class="main-module-tabs">
@@ -570,11 +618,18 @@
 // ==========================================
   // バージョン管理・更新履歴設定
   // ==========================================
-  const CURRENT_VERSION = "1.1.4";
+  const CURRENT_VERSION = "1.1.5";
   const STORAGE_KEY_VERSION = "element_ion_app_version";
 
   // 更新履歴データ（配列形式：新しい順）
   const UPDATES_HISTORY = [
+    {
+      version: "1.1.5",
+      date: "2026-09-09",
+      changes: [
+        "軽微な修正をしました。"
+      ]
+    },
     {
       version: "1.1.4",
       date: "2026-09-08",
