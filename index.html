@@ -6,11 +6,11 @@
   <title>基本元素とイオン暗記倶楽部</title>
 
   <!-- アイコン設定（PCタブ用 & iOSホーム画面用） -->
-  <link rel="icon" href="icon.png?v=1.1.5" type="image/png">
-  <link rel="apple-touch-icon" href="icon.png?v=1.1.5">
+  <link rel="icon" href="icon.png?v=1.1.7" type="image/png">
+  <link rel="apple-touch-icon" href="icon.png?v=1.1.7">
 
   <!-- PWA設定（Android / Chrome用） -->
-  <link rel="manifest" href="manifest.json?v=1.1.5">
+  <link rel="manifest" href="manifest.json?v=1.1.7">
   <meta name="theme-color" content="#2c3e50">
 
   <!-- iOS (Safari) 用のPWA全画面表示設定 -->
@@ -51,7 +51,7 @@
 
     /* バージョン更新通知バナー */
     .version-notice {
-      background: linear-gradient(135deg, #d35400, #e67e22);
+      background: linear-gradient(135deg, #1e8449, #27ae60);
       color: #ffffff;
       padding: 8px 12px;
       border-radius: 8px;
@@ -97,11 +97,12 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.5);
+      background-color: rgba(0, 0, 0, 0.5);
       display: flex;
       justify-content: center;
       align-items: center;
       z-index: 1000;
+      padding: 16px;
     }
 
     .modal-content {
@@ -111,9 +112,21 @@
       width: 90%;
       padding: 16px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      animation: modalFadeIn 0.3s ease-out;
+      overflow: hidden;
+    }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid var(--secondary-color);
+      padding-bottom: 8px;
       margin-bottom: 12px;
     }
 
@@ -121,21 +134,34 @@
       font-size: 16px;
       font-weight: bold;
       color: var(--primary-color);
+      line-height: 1.4;
     }
 
     .modal-footer {
       text-align: right;
-      margin-top: 12px;
+    }
+
+    .modal-body {
+      font-size: 13px;
+      color: #444;
+      line-height: 1.6;
+      max-height: 60vh;
+      overflow-y: auto;
+      margin-bottom: 16px;
     }
 
     .modal-btn {
-      background: var(--primary-color);
+      background-color: var(--primary-color);
       color: #fff;
       border: none;
       padding: 6px 16px;
-      border-radius: 4px;
+      border-radius: 6px;
       cursor: pointer;
       font-weight: bold;
+    }
+
+    .modal-btn:hover {
+      opacity: 0.9;
     }
 
     .header-container {
@@ -525,7 +551,7 @@
 
   <div class="header-container">
     <h1>基本元素とイオン暗記倶楽部</h1>
-    <span class="version-badge" id="versionBadge">v1.1.5</span>
+    <span class="version-badge" id="versionBadge">v1.1.7</span>
   </div>
 
   <div class="main-module-tabs">
@@ -618,11 +644,18 @@
 // ==========================================
   // バージョン管理・更新履歴設定
   // ==========================================
-  const CURRENT_VERSION = "1.1.5";
+  const CURRENT_VERSION = "1.1.7";
   const STORAGE_KEY_VERSION = "element_ion_app_version";
 
   // 更新履歴データ（配列形式：新しい順）
   const UPDATES_HISTORY = [
+    {
+      version: "1.1.7",
+      date: "2026-09-10",
+      changes: [
+        "細かな体裁を整えました。"
+      ]
+    },
     {
       version: "1.1.5",
       date: "2026-09-09",
